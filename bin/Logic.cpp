@@ -3,7 +3,10 @@
 //
 
 #include "Logic.h"
-#define CONFIGPARSER_DEBUG
+//#define CONFIGPARSER_DEBUG
+//#define REQUESTS_DEBUG
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/screen.hpp>
 
 void Logic(const std::string& fn){
   ConfigParser a = ConfigParser(fn);
@@ -18,7 +21,23 @@ void Logic(const std::string& fn){
   std::cout << "\n----------------------\n";
 #endif
 
-  City myCity = City(a.GetCities()[0]);
-  myCity.GettingCoords();
+  std::vector<City> CitiesData_;
+  for (const auto& el : a.GetCities()){
+    City tmp = City(el);
+    tmp.GetCoords();
+    CitiesData_.push_back(tmp);
+  }
+
+  AllCitiesForecast MagicWeatherObject = AllCitiesForecast(CitiesData_, a.GetFrequency(), a.GetPeriod());
+#ifdef REQUESTS_DEBUG
+  for (auto el : MagicWeatherObject.GetCitiesData()){
+    std::cout << el.GetCityName() << " shirota: " << el.GetLatitude() << " dolgota: " << el.GetLongitude() << "\n";
+  }
+#endif
+  MagicWeatherObject.GetForecast();
+
 
 }
+//void Render(const AllCitiesForecast& MagicWeatherObject) {
+//
+//}

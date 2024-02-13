@@ -1,6 +1,6 @@
 {
   "Frequency" : 1,
-  "Period" : 2,
+  "Period" : 7,
   "Cities" :
-  {"0" : "Bakhmut", "1" : "Moscow" }
+  {"0" : "Bakhmut", "1" : "Moscow", "2" : "London" }
 }

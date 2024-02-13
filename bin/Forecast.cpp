@@ -3,6 +3,3 @@
 //
 
 #include "Forecast.h"
-void Day::DayRender() {
-
-}

@@ -4,18 +4,65 @@
 
 #include "Requests.h"
 
-void City::GettingCoords() {
+void City::GetCoords() {
   std::string Ninjas_City_link = "https://api.api-ninjas.com/v1/city";
   std::string Token = "RBYjVh84e6mhv2V6R0SPQg==NNp47ySlItRaLCbf";
-  cpr::Response Data = cpr::Get(cpr::Url{Ninjas_City_link}, cpr::Parameters{{"name", CityName}}, cpr::Header{{"X-Api-Key" , Token}});
+  cpr::Response Data = cpr::Get(cpr::Url{Ninjas_City_link},
+                                cpr::Parameters{{"name", CityName}},
+                                cpr::Header{{"X-Api-Key" , Token}});
   if (Data.status_code != 200){
     std::cerr << "This City was not Found by Ninjas-Api, use english and only current name of city.\n";
     exit(EXIT_FAILURE);
   }
   json Json_City = json::parse(Data.text);
-//  std::cout << Json_City.dump(1) << "\n";
   CityName = Json_City[0]["name"];
-  Longitude = Json_City[0]["longitude"];
+  Longitude = Json_City[0]["longitude"]; //
   Latitude = Json_City[0]["latitude"];
-  std::cout << Latitude << " " << Longitude << " " << CityName << " ";
+}
+float City::GetLongitude() const {
+  return Longitude;
+}
+float City::GetLatitude() const {
+  return Latitude;
+}
+//int City::GetFrequency() const {
+//  return Frequency;
+//}
+//int City::GetPeriod() const {
+//  return Period;
+//}
+
+void AllCitiesForecast::GetForecast(){
+  for (auto& el : CitiesData){
+    std::string OMURL = "https://api.open-meteo.com/v1/forecast";
+    cpr::Response Data = cpr::Get(cpr::Url{OMURL},
+        cpr::Parameters{{"latitude", std::to_string(el.GetLatitude())},
+                        {"longitude", std::to_string(el.GetLongitude())},
+                        {"hourly", "wind_speed_10m"},
+                        {"hourly", "wind_direction_10m"},
+                        {"hourly", "weather_code"},
+                        {"hourly", "precipitation"},
+                        {"hourly", "visibility"},
+                        {"timezone", "Europe/Moscow"},
+                        {"hourly", "temperature_2m"},
+                        {"forecast_days", std::to_string(Period)},
+                        {"hourly", "relative_humidity_2m"}});
+//    std::cout << "\n----------------\n" << Data.text;
+    json mama = json::parse(Data.text);
+//    std::cout << "\n----------------\n" << mama["hourly"]["temperature_2m"][0];
+    for (int i = 0; i < Period * 4; i++) {
+      TimePeriod A;
+      A.Weather_type = mama["hourly"]["weather_code"][i * 6];
+      A.Temperature = mama["hourly"]["temperature_2m"][i * 6];
+      A.WindDir = mama["hourly"]["wind_direction_10m"][i * 6];
+      A.WindMoveSpeed = mama["hourly"]["wind_speed_10m"][i * 6];
+      A.Visibility = mama["hourly"]["visibility"][i * 6];
+      A.Fallout = mama["hourly"]["precipitation"][i * 6];
+      el.WeatherData.push_back(A);
+//      std::cout << mama["hourly"]["weather_code"][i * 6] << " ";
+//      if (i%4 == 0)
+//        std::cout << "\n";
+    }
+//    std::cout << "\n----------------\n";
+  }
 }
