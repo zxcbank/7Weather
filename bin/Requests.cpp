@@ -3,6 +3,7 @@
 //
 
 #include "Requests.h"
+#include <cmath>
 
 void City::GetCoords() {
   std::string Ninjas_City_link = "https://api.api-ninjas.com/v1/city";
@@ -25,12 +26,6 @@ float City::GetLongitude() const {
 float City::GetLatitude() const {
   return Latitude;
 }
-//int City::GetFrequency() const {
-//  return Frequency;
-//}
-//int City::GetPeriod() const {
-//  return Period;
-//}
 
 void AllCitiesForecast::GetForecast(){
   for (auto& el : CitiesData){
@@ -45,12 +40,12 @@ void AllCitiesForecast::GetForecast(){
                         {"hourly", "visibility"},
                         {"timezone", "Europe/Moscow"},
                         {"hourly", "temperature_2m"},
-                        {"forecast_days", std::to_string(Period)},
+                        {"forecast_days", "15"},
                         {"hourly", "relative_humidity_2m"}});
 //    std::cout << "\n----------------\n" << Data.text;
     json mama = json::parse(Data.text);
 //    std::cout << "\n----------------\n" << mama["hourly"]["temperature_2m"][0];
-    for (int i = 0; i < Period * 4; i++) {
+    for (int i = 0; i < 60; i++) {
       TimePeriod A;
       A.Weather_type = mama["hourly"]["weather_code"][i * 6];
       A.Temperature = mama["hourly"]["temperature_2m"][i * 6];
@@ -58,11 +53,8 @@ void AllCitiesForecast::GetForecast(){
       A.WindMoveSpeed = mama["hourly"]["wind_speed_10m"][i * 6];
       A.Visibility = mama["hourly"]["visibility"][i * 6];
       A.Fallout = mama["hourly"]["precipitation"][i * 6];
+      A.time = mama["hourly"]["time"][i * 6];
       el.WeatherData.push_back(A);
-//      std::cout << mama["hourly"]["weather_code"][i * 6] << " ";
-//      if (i%4 == 0)
-//        std::cout << "\n";
     }
-//    std::cout << "\n----------------\n";
   }
 }

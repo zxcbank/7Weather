@@ -9,15 +9,17 @@
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
 
+
 class TimePeriod {
  public:
   std::string TimePeriodName;
   int Weather_type;
-  float Temperature; // Средняя температура в течение указанного периода
-  float WindMoveSpeed; //  Скорость ветра
+  int Temperature; // Средняя температура в течение указанного периода
+  int WindMoveSpeed; //  Скорость ветра
   int WindDir; // Направление ветра
   int Visibility; // Видимость в км
   int Fallout; // Осадки в мм
+  std::string time;
 };
 
 class City {
