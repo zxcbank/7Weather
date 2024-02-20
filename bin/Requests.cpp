@@ -7,7 +7,7 @@
 
 void City::GetCoords() {
   std::string Ninjas_City_link = "https://api.api-ninjas.com/v1/city";
-  std::string Token = "RBYjVh84e6mhv2V6R0SPQg==NNp47ySlItRaLCbf";
+  std::string Token = "G2RJZtYr/giSjCtdLBBpMw==39GYXHrNepeu021U";
   cpr::Response Data = cpr::Get(cpr::Url{Ninjas_City_link},
                                 cpr::Parameters{{"name", CityName}},
                                 cpr::Header{{"X-Api-Key" , Token}});
