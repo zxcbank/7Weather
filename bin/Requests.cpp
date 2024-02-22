@@ -12,7 +12,11 @@ void City::GetCoords() {
                                 cpr::Parameters{{"name", CityName}},
                                 cpr::Header{{"X-Api-Key" , Token}});
   if (Data.status_code != 200){
-    std::cerr << "This City was not Found by Ninjas-Api, use english and only current name of city.\n";
+    if (Data.status_code == 0) {
+      std::cerr << "No Internet connection\n";
+    } else {
+      std::cerr << "This City was not Found by Ninjas-Api, use english and only current name of city.\n";
+    }
     exit(EXIT_FAILURE);
   }
   json Json_City = json::parse(Data.text);
